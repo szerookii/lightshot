@@ -4,7 +4,6 @@ This is a custom server for the screenshot tool [Lightshot](https://prnt.sc/).
 
 ## Installation
 Run :
-
 ```
 go run lightshot.go
 ```
