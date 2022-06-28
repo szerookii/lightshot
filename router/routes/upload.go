@@ -17,6 +17,7 @@ import (
 func UploadRoute(res http.ResponseWriter, req *http.Request) {
 	config, err := config.GetConfig()
 	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
 		res.Write([]byte("An error occured"))
 		return
 	} else {
@@ -27,9 +28,12 @@ func UploadRoute(res http.ResponseWriter, req *http.Request) {
 
 	file, _, err := req.FormFile("image")
 	if err != nil {
-		res.Write([]byte("An error occured"))
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte("Bad request"))
 		return
 	}
+
+	fmt.Println(file)
 
 	buf := new(bytes.Buffer)
 	io.Copy(buf, file)
@@ -40,6 +44,7 @@ func UploadRoute(res http.ResponseWriter, req *http.Request) {
 
 	err = db.Save(image).Error
 	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
 		res.Write([]byte("An error occured"))
 		return
 	}
@@ -54,5 +59,6 @@ func UploadRoute(res http.ResponseWriter, req *http.Request) {
 
 	response := fmt.Sprintf("<response>\n<status>success</status>\n<share>%s</share>\n</response>", url)
 
+	res.WriteHeader(http.StatusOK)
 	res.Write([]byte(response))
 }
