@@ -16,3 +16,6 @@
 
 # Config file
 config.json
+
+# Database files
+*.db
