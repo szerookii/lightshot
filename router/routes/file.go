@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/Seyz123/lightshot/config"
+	"github.com/Seyz123/lightshot/database"
+	"github.com/Seyz123/lightshot/database/models"
 	"github.com/gorilla/mux"
 )
 
@@ -13,6 +15,7 @@ func FileRoute(res http.ResponseWriter, req *http.Request) {
 
 	config, err := config.GetConfig()
 	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
 		res.Write([]byte("An error occured"))
 		return
 	} else {
@@ -21,6 +24,24 @@ func FileRoute(res http.ResponseWriter, req *http.Request) {
 		}
 	}
 
+	db, err := database.GetDB()
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		res.Write([]byte("An error occured"))
+		return
+	}
+
+	var image models.Image
+
+	err = db.Where("id = ?", id).First(&image).Error
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		res.Write([]byte("Image not found"))
+		return
+	}
+
+	res.Header().Set("Content-Type", "image/png")
 	res.WriteHeader(http.StatusOK)
-	res.Write([]byte(id))
+
+	res.Write([]byte(image.Data))
 }

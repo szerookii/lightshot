@@ -1,16 +1,18 @@
 package config
 
 import (
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"os"
 )
 
 type Config struct {
-	Host  string `json:"host"`
-	Port  string `json:"port"`
-	Https bool   `json:"https"`
-	Logs  bool   `json:"logs"`
+	Host          string   `json:"host"`
+	Port          string   `json:"port"`
+	Https         bool     `json:"https"`
+	Logs          bool     `json:"logs"`
+	AuthorizedIPs []string `json:"authorized_ips"`
 }
 
 func GetConfig() (*Config, error) {
@@ -21,10 +23,13 @@ func GetConfig() (*Config, error) {
 		config.Port = "80"
 		config.Https = false
 		config.Logs = true
+		config.AuthorizedIPs = []string{}
 
-		json, _ := json.Marshal(config)
+		configBytes, _ := json.Marshal(config)
+		var configBuffer bytes.Buffer
+		_ = json.Indent(&configBuffer, configBytes, "", "\t")
 
-		if err = ioutil.WriteFile("config.json", json, 0777); err != nil {
+		if err = ioutil.WriteFile("config.json", configBuffer.Bytes(), 0777); err != nil {
 			return nil, err
 		}
 	}

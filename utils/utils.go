@@ -1,15 +1,11 @@
 package utils
 
-import "math/rand"
-
-const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-func GenerateId(n int) string {
-	b := make([]byte, n)
-
-	for i := range b {
-		b[i] = chars[rand.Intn(len(chars))]
+func ContainsString(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
 	}
 
-	return string(b)
+	return false
 }

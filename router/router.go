@@ -18,7 +18,8 @@ func Init() {
 
 	r := mux.NewRouter()
 
-	r.HandleFunc("/upload/{a}/{b}", routes.UploadRoute).Methods("POST")
+	r.HandleFunc("/file/{id}", routes.FileRoute).Methods("GET")
+	r.HandleFunc("/upload/{a}/{b}/", routes.UploadRoute).Methods("POST")
 
 	log.Println("Starting server on port " + config.Port)
 
