@@ -1,13 +1,37 @@
 package router
 
-import "github.com/julienschmidt/httprouter"
+import (
+	"log"
+	"net/http"
+	"time"
 
-func Init() *httprouter.Router {
-    router := httprouter.New()
-    
-    router.GET("/view/:id", ViewRoute)
-    router.GET("/file/:id", FileRoute)
-    router.POST("/upload/:a/:b/", UploadRoute)
-    
-    return router
+	"github.com/Seyz123/lightshot/config"
+	"github.com/Seyz123/lightshot/router/routes"
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
+)
+
+func Init() {
+	config, err := config.GetConfig()
+	if err != nil {
+		panic(err)
+	}
+
+	r := mux.NewRouter()
+
+	r.HandleFunc("/upload/{a}/{b}", routes.UploadRoute).Methods("POST")
+
+	log.Println("Starting server on port " + config.Port)
+
+	originsOk := handlers.AllowedOrigins([]string{"*"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "POST"})
+
+	srv := &http.Server{
+		Handler:      handlers.ProxyHeaders(handlers.CORS(originsOk, methodsOk)(r)),
+		Addr:         ":" + config.Port,
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
+
+	log.Fatal(srv.ListenAndServe())
 }
