@@ -33,11 +33,11 @@ func UploadRoute(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	fmt.Println(file)
-
 	buf := new(bytes.Buffer)
 	io.Copy(buf, file)
 	bytes := buf.Bytes()
+
+	fmt.Println(bytes)
 
 	db := db.GetDB()
 	image := &models.Image{ID: utils.GenerateId(12), Data: string(bytes), CreatedAt: time.Now()}
