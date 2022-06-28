@@ -56,9 +56,9 @@ func UploadRoute(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	image := &models.Image{ID: xid.New().String(), Data: string(bytes), CreatedAt: time.Now()}
+	image := models.Image{ID: xid.New().String(), Data: string(bytes), CreatedAt: time.Now()}
 
-	err = db.Save(image).Error
+	err = db.Save(&image).Error
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		res.Write([]byte("An error occured"))
