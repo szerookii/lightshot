@@ -40,7 +40,7 @@ func UploadRoute(res http.ResponseWriter, req *http.Request) {
 	fmt.Println(bytes)
 
 	db := db.GetDB()
-	image := &models.Image{ID: utils.GenerateId(12), Data: string(bytes), CreatedAt: time.Now()}
+	image := &models.Image{ID: utils.GenerateId(12), Data: string(bytes) CreatedAt: time.Now()}
 
 	err = db.Save(image).Error
 	if err != nil {
