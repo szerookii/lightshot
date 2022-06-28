@@ -75,6 +75,8 @@ func UploadRoute(res http.ResponseWriter, req *http.Request) {
 
 	response := fmt.Sprintf("<response>\n<status>success</status>\n<share>%s</share>\n</response>", url)
 
+	res.Header().Add("Content-Type", "text/xml")
 	res.WriteHeader(http.StatusOK)
+
 	res.Write([]byte(response))
 }
