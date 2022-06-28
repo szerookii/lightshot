@@ -7,6 +7,7 @@ import (
 
 	"github.com/Seyz123/lightshot/config"
 	"github.com/Seyz123/lightshot/router/routes"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -24,7 +25,7 @@ func Init() {
 	log.Println("Starting server on port " + config.Port)
 
 	srv := &http.Server{
-		Handler:      r,
+		Handler:      handlers.ProxyHeaders(r),
 		Addr:         ":" + config.Port,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
