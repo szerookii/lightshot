@@ -10,7 +10,7 @@ import (
 )
 
 func Init() {
-	db, err := gorm.Open(sqlite.Open("./database.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("./database.db"), &gorm.Config{Logger: logger.Default.LogMode(logger.Silent)})
 
 	if err != nil {
 		panic("failed to connect database")
@@ -51,5 +51,5 @@ func checkDeletable() {
 }
 
 func GetDB() (*gorm.DB, error) {
-	return gorm.Open(sqlite.Open("./database.db"), &gorm.Config{})
+	return gorm.Open(sqlite.Open("./database.db"), &gorm.Config{Logger: logger.Default.LogMode(logger.Silent)})
 }
